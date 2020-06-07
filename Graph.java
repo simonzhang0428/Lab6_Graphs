@@ -146,8 +146,8 @@ public class Graph {
      * Inserts vertex v into the adjacency list of vertex u
      * (i.e. inserts v into the list at index u)
      *
-     * @throws IndexOutOfBoundsException  when the precondition
-     *                          is violated
+     * @throws IndexOutOfBoundsException when the precondition
+     *                                   is violated
      * @precondition 0 < u <= vertices, 0 < v <= vertices
      */
     public void addDirectedEdge(Integer u, Integer v) throws IndexOutOfBoundsException {
@@ -164,8 +164,8 @@ public class Graph {
      * (i.e. inserts v into the list at index u)
      * and inserts u into the adjacent vertex list of v
      *
-     * @throws IndexOutOfBoundsException  when the precondition
-     *                          is violated
+     * @throws IndexOutOfBoundsException when the precondition
+     *                                   is violated
      * @precondition 0 < u <= vertices, 0 < v <= vertices
      */
     public void addUndirectedEdge(Integer u, Integer v) throws IndexOutOfBoundsException {
@@ -230,17 +230,22 @@ public class Graph {
         } else {
             color.set(source, 'G');
             distance.set(source, 0);
-            List<Integer> temp = new List<>();
-            temp.addLast(source);
-            while (!temp.isEmpty()) {
-                int x = temp.getFirst();
-                temp.removeFirst();
-                for (int y = 1; y <= adj.get(x).getLength(); y++) {
+            List<Integer> queue_list = new List<>();
+            queue_list.addLast(source);
+            while (!queue_list.isEmpty()) {
+                int x = queue_list.getFirst();
+                queue_list.removeFirst();
+
+                List<Integer> adj_in_x = adj.get(x);
+                for (int i = 0; i < adj_in_x.getLength(); i++) {
+                    adj_in_x.placeIterator();
+                    adj_in_x.advanceNTimes(i);
+                    int y = adj_in_x.getIterator();
                     if (color.get(y) == 'W') {
                         color.set(y, 'G');
-                        distance.set(y, distance.get(x)+1);
-                        parent.set(y, parent.get(x));
-                        temp.addFirst(y);
+                        distance.set(y, distance.get(x) + 1);
+                        parent.set(y, x);
+                        queue_list.addLast(y);
                     }
                 }
                 color.set(x, 'B');
