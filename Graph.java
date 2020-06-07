@@ -155,6 +155,7 @@ public class Graph {
             throw new IndexOutOfBoundsException("addDirectedEdge, out of bound.");
         } else {
             adj.get(u).addLast(v);
+            this.edges++;
         }
     }
 
@@ -172,6 +173,7 @@ public class Graph {
             throw new IndexOutOfBoundsException("addUndirectedEdge, out of bound.");
         } else {
             adj.get(u).addLast(v);
+            this.edges++;
         }
     }
 
@@ -186,7 +188,7 @@ public class Graph {
     public String toString() {
         String result = "";
         for (int i = 1; i <= vertices; i++) {
-            result += Integer.toString(i) + adj.get(i);
+            result += Integer.toString(i) + ": " + adj.get(i);
         }
         return result;
     }
@@ -238,7 +240,7 @@ public class Graph {
                         color.set(y, 'G');
                         distance.set(y, distance.get(x)+1);
                         parent.set(y, parent.get(x));
-                        temp.removeFirst();
+                        temp.addFirst(y);
                     }
                 }
                 color.set(x, 'B');
