@@ -1,6 +1,5 @@
 /**
  * Graph.java
- *
  * @author Daniil Durnev
  * @author Simon Zhang
  * CIS 22C, Lab 6
@@ -39,7 +38,6 @@ public class Graph {
             parent.add(i, 0);
             adj.add(i, new List<>());
         }
-
     }
 
 
@@ -129,7 +127,7 @@ public class Graph {
      * @param v a vertex in the graph
      * @return the adjacency List a v
      * @throws IndexOutOfBoundsException when
-     *                                   the precondition is violated
+     * the precondition is violated
      * @precondition 0 < v <= vertices
      */
     public List<Integer> getAdjacencyList(Integer v) throws IndexOutOfBoundsException {
@@ -173,6 +171,7 @@ public class Graph {
             throw new IndexOutOfBoundsException("addUndirectedEdge, out of bound.");
         } else {
             adj.get(u).addLast(v);
+            adj.get(v).addLast(u);
             this.edges++;
         }
     }
@@ -188,7 +187,7 @@ public class Graph {
     public String toString() {
         String result = "";
         for (int i = 1; i <= vertices; i++) {
-            result += Integer.toString(i) + ": " + adj.get(i);
+            result += i + ": " + adj.get(i);
         }
         return result;
     }
@@ -204,10 +203,10 @@ public class Graph {
     public void printBFS() {
         System.out.println("v\tc\tp\td\t");
         for (int i = 1; i <= vertices; i++) {
-            System.out.println(Integer.toString(i) + "\t" +
-                    Character.toString(color.get(i)) + "\t" +
-                    Integer.toString(parent.get(i)) + "\t" +
-                    Integer.toString(distance.get(i)) + "\t");
+            System.out.println(i + "\t" +
+                    color.get(i) + "\t" +
+                    parent.get(i) + "\t" +
+                    distance.get(i) + "\t");
         }
     }
 
@@ -233,13 +232,12 @@ public class Graph {
             List<Integer> queue_list = new List<>();
             queue_list.addLast(source);
             while (!queue_list.isEmpty()) {
-                int x = queue_list.getFirst();
-                queue_list.removeFirst();
+                int x = queue_list.getLast();
+                queue_list.removeLast();
 
                 List<Integer> adj_in_x = adj.get(x);
                 for (int i = 0; i < adj_in_x.getLength(); i++) {
                     adj_in_x.placeIterator();
-                    adj_in_x.advanceNTimes(i);
                     int y = adj_in_x.getIterator();
                     if (color.get(y) == 'W') {
                         color.set(y, 'G');
@@ -247,10 +245,10 @@ public class Graph {
                         parent.set(y, x);
                         queue_list.addLast(y);
                     }
+                    adj_in_x.advanceIterator();
                 }
                 color.set(x, 'B');
             }
         }
     }
-
 }
