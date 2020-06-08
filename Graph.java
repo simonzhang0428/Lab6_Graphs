@@ -230,7 +230,7 @@ public class Graph {
             color.set(source, 'G');
             distance.set(source, 0);
             List<Integer> queue_list = new List<>();
-            queue_list.addLast(source);
+            queue_list.addFirst(source);
             while (!queue_list.isEmpty()) {
                 int x = queue_list.getFirst();
                 queue_list.removeFirst();
