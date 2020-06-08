@@ -232,12 +232,13 @@ public class Graph {
             List<Integer> queue_list = new List<>();
             queue_list.addLast(source);
             while (!queue_list.isEmpty()) {
-                int x = queue_list.getLast();
-                queue_list.removeLast();
+                int x = queue_list.getFirst();
+                queue_list.removeFirst();
 
                 List<Integer> adj_in_x = adj.get(x);
                 for (int i = 0; i < adj_in_x.getLength(); i++) {
                     adj_in_x.placeIterator();
+                    adj_in_x.advanceNTimes(i);
                     int y = adj_in_x.getIterator();
                     if (color.get(y) == 'W') {
                         color.set(y, 'G');
@@ -245,7 +246,6 @@ public class Graph {
                         parent.set(y, x);
                         queue_list.addLast(y);
                     }
-                    adj_in_x.advanceIterator();
                 }
                 color.set(x, 'B');
             }
