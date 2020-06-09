@@ -57,7 +57,5 @@ public class GraphTest {
         } catch (IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
 }

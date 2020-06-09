@@ -1,3 +1,4 @@
+
 /**
  * FriendNetwork.java
  *
@@ -8,96 +9,137 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FriendNetwork {
-    public static void main(String[] args) throws FileNotFoundException {
-        int vertices, id, intAdjacent, choice;
-        String name, adjacent;
-        ArrayList<String> names = new ArrayList<>();
-        ArrayList<Integer> ids = new ArrayList<>();
-        List<Integer> currentFriends = new List<>();
-        List<Integer> recommendFriends = new List<>();
+	public static void main(String[] args) throws FileNotFoundException {
+		int vertices, id, intAdjacent, choice;
+		String name, adjacent;
+		ArrayList<String> names = new ArrayList<>();
+		ArrayList<Integer> ids = new ArrayList<>();
+		List<Integer> currentFriends = new List<>();
+		List<Integer> recommendFriends = new List<>();
+		Scanner keyboardInput = new Scanner(System.in);
+		Scanner fileInput;
 
-        System.out.println("Welcome to the Friend Recommender!\n");
-        System.out.print("Enter the name of a file: ");
-        Scanner input = new Scanner(System.in);
-        String fileName = input.nextLine();
-        File file = new File(fileName);
-        // how to invalid file name?
-        input = new Scanner(file);
-        vertices = Integer.parseInt(input.nextLine());
-        Graph g = new Graph(vertices);
-        while (input.hasNextLine()) {
-            id = Integer.parseInt(input.nextLine());
-            ids.add(id);
-            name = input.nextLine();
-            names.add(name);
-            adjacent = input.nextLine();
-            for (String stringAdjacent : adjacent.split(",")) {
-                stringAdjacent = stringAdjacent.trim();
-                intAdjacent = Integer.parseInt(stringAdjacent);
-                g.addUndirectedEdge(id, intAdjacent);
-            }
-        } // End of reading file and created graph
+		System.out.println("Welcome to the Friend Recommender!\n");
 
-        System.out.println("Enter Your User Number Below:");
-        for (int i = 0; i < names.size(); i++) {
-            System.out.println((i + 1) + ". " + names.get(i));
-        }
+		while (true) {
+			try {
+				System.out.print("Enter the name of a file: ");
+				String fileName = keyboardInput.nextLine();
+				File file = new File("./" + fileName);
 
-        System.out.print("\nEnter your choice: ");
-        input = new Scanner(System.in);
-        id = Integer.parseInt(input.nextLine());
+				fileInput = new Scanner(file);
+				break;
+			} catch (FileNotFoundException e) {
+				System.out.println("\nInvalid file name!");
+			}
+		}
 
-        System.out.println("\nHere are your current friends:");
-        currentFriends = g.getAdjacencyList(id);
-        for (int i = 0; i < currentFriends.getLength(); i++) {
-            currentFriends.placeIterator();
-            currentFriends.advanceNTimes(i);
-            String result = currentFriends.getIterator() + ". ";
-            System.out.println(result + names.get(i));
-        }
+		vertices = Integer.parseInt(fileInput.nextLine());
+		Graph g = new Graph(vertices);
 
-        System.out.println("\nHere are your recommended friends:");
-        g.BFS(id);
-        for (int i = 1; i <= g.getNumVertices(); i++) {
-            if ((g.getDistance(i) > 0) && g.getParent(i) != id) {
-                recommendFriends.addLast(i);
-                System.out.println((i) + ". " + names.get(i-1));
-            }
-        }
+		while (fileInput.hasNextLine()) {
+			id = Integer.parseInt(fileInput.nextLine());
+			ids.add(id);
+			name = fileInput.nextLine();
+			names.add(name);
+			adjacent = fileInput.nextLine();
+			for (String stringAdjacent : adjacent.split(",")) {
+				stringAdjacent = stringAdjacent.trim();
+				intAdjacent = Integer.parseInt(stringAdjacent);
+				g.addUndirectedEdge(id, intAdjacent);
+			}
+		} // End of reading file and created graph
 
-        /// above is tested.
+		System.out.println("\nEnter Your User Number Below:");
+		for (int i = 0; i < names.size(); i++) {
+			System.out.println((i + 1) + ". " + names.get(i));
+		}
 
-        // just update the current friends and recommend friends, no call BFS?
-        System.out.println("\nEnter the number of a friend to add or -1 to quit:");
-        System.out.print("Enter your choice: ");
-        id = Integer.parseInt(input.nextLine());
-        currentFriends.addLast(id);
-        // how to insert the new id into the correct position such that the array sorted.
+		System.out.print("\nEnter your choice: ");
+		id = Integer.parseInt(keyboardInput.nextLine());
 
-        recommendFriends.placeIterator();
-        recommendFriends.advanceNTimes(recommendFriends.linearSearch(id));
-        recommendFriends.removeIterator();
+		System.out.println("\nHere are your current friends:");
 
-        // should generate into function to reduce DRY
-        System.out.println("\nHere are your current friends:");
-        for (int i = 0; i < currentFriends.getLength(); i++) {
-            currentFriends.placeIterator();
-            currentFriends.advanceNTimes(i);
-            String result = currentFriends.getIterator() + ". ";
-            System.out.println(result + names.get(i));
-        }
+		currentFriends = g.getAdjacencyList(id);
 
-        System.out.println("\nHere are your recommended friends:");
-        for (int i = 1; i <= g.getNumVertices(); i++) {
-            if ((g.getDistance(i) > 0) && g.getParent(i) != id) {
-                recommendFriends.addLast(i);
-                System.out.println((i) + ". " + names.get(i-1));
-            }
-        }
-    }
+		for (int i = 0; i < currentFriends.getLength(); i++) {
+			currentFriends.placeIterator();
+			currentFriends.advanceNTimes(i);
+			String result = currentFriends.getIterator() + ". ";
+			System.out.println(result + names.get(currentFriends.getIterator() - 1));
+		}
+
+		System.out.println("\nHere are your recommended friends:");
+		g.BFS(id);
+		for (int i = 1; i <= g.getNumVertices(); i++) {
+			if ((g.getDistance(i) > 0) && g.getParent(i) != id) {
+				recommendFriends.addLast(i);
+				System.out.println((i) + ". " + names.get(i - 1));
+			}
+		}
+
+		/// above is tested.
+
+		// just update the current friends and recommend friends, no call BFS? ==> No BFS, just modify two lists
+		while (true) {
+			System.out.println("\nEnter the number of a friend to add or -1 to quit:");
+			System.out.print("Enter your choice: ");
+			id = Integer.parseInt(keyboardInput.nextLine());
+
+			if (id == -1) {
+				break;
+			}
+
+			// Adding in a sorted order
+			currentFriends.placeIterator();
+			boolean added = false;
+			
+			if(currentFriends.getIterator() > id) {
+				currentFriends.addFirst(id);
+				added = true;
+			}
+			
+			for(int i = 0; i < currentFriends.getLength() && !added; i++) {
+				// Adding at the last position in the list
+				if(i == currentFriends.getLength() -1) {
+					currentFriends.addLast(id);
+					added = true;
+				} else {
+					if(currentFriends.getIterator() > id) {
+						currentFriends.reverseIterator();
+						currentFriends.addIterator(id);
+						added = true;
+					}
+				}
+				currentFriends.advanceIterator();
+			}
+
+			recommendFriends.placeIterator();
+			recommendFriends.advanceNTimes(recommendFriends.linearSearch(id) - 1);
+			recommendFriends.removeIterator();
+
+			// should generate into function to reduce DRY
+			System.out.println("\nHere are your current friends:");
+			for (int i = 0; i < currentFriends.getLength(); i++) {
+				currentFriends.placeIterator();
+				currentFriends.advanceNTimes(i);
+				String result = currentFriends.getIterator() + ". ";
+				System.out.println(result + names.get(currentFriends.getIterator() - 1));
+			}
+
+			System.out.println("\nHere are your recommended friends:");
+			for (int i = 0; i < recommendFriends.getLength(); i++) {
+				recommendFriends.placeIterator();
+				recommendFriends.advanceNTimes(i);
+				String result = recommendFriends.getIterator() + ". ";
+				System.out.println(result + names.get(recommendFriends.getIterator() - 1));
+			}
+		}
+
+		System.out.println("\nGoodbye!");
+	}
 }
