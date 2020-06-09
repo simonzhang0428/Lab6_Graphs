@@ -1,5 +1,6 @@
 /**
  * List.java
+ *
  * @author Daniil Durnev
  * @author Simon Zhang
  * CIS 22C, Lab 6
