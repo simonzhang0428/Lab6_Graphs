@@ -1,5 +1,6 @@
 /**
  * Graph.java
+ *
  * @author Daniil Durnev
  * @author Simon Zhang
  * CIS 22C, Lab 6
@@ -170,8 +171,12 @@ public class Graph {
         if ((u <= 0 || u > vertices) || (v <= 0 || v > vertices)) {
             throw new IndexOutOfBoundsException("addUndirectedEdge, out of bound.");
         } else {
-            adj.get(u).addLast(v);
-            adj.get(v).addLast(u);
+            if (adj.get(u).linearSearch(v) == -1) {
+                adj.get(u).addLast(v);
+            }
+            if (adj.get(v).linearSearch(u) == -1) {
+                adj.get(v).addLast(u);
+            }
             this.edges++;
         }
     }
@@ -230,7 +235,7 @@ public class Graph {
             color.set(source, 'G');
             distance.set(source, 0);
             List<Integer> queue_list = new List<>();
-            queue_list.addFirst(source);
+            queue_list.addLast(source);
             while (!queue_list.isEmpty()) {
                 int x = queue_list.getFirst();
                 queue_list.removeFirst();
