@@ -75,6 +75,8 @@ public class FriendNetwork {
 
         System.out.println("\nHere are your recommended friends:");
         g.BFS(id);
+
+
         for (int i = 1; i <= g.getNumVertices(); i++) {
             if ((g.getDistance(i) > 0) && g.getParent(i) != id) {
                 recommendFriends.addLast(i);
@@ -82,63 +84,70 @@ public class FriendNetwork {
             }
         }
 
-        // just update the current friends and recommend friends, no call BFS.
-        while (true) {
-            System.out.println("\nEnter the number of a friend to add or -1 to quit:");
-            System.out.print("Enter your choice: ");
-            id = Integer.parseInt(input.nextLine());
+        if (recommendFriends.getLength() == 0) {
+            System.out.println("Sorry! We don't have any recommendations for you at this time.");
+        } else {
 
-            if (id == -1) {
-                break;
-            }
+            // just update the current friends and recommend friends, no call BFS.
+            while (true) {
+                System.out.println("\nEnter the number of a friend to add or -1 to quit:");
+                System.out.print("Enter your choice: ");
+                id = Integer.parseInt(input.nextLine());
+
+                if (id == -1) {
+                    break;
+                }
 
 
-            // Adding in a sorted order
-            currentFriends.placeIterator();
-            if (id < currentFriends.getIterator()) {
-                currentFriends.addFirst(id);
-            } else {
-                currentFriends.advanceIterator();
-                while (!currentFriends.offEnd()) {
-                    if (id < currentFriends.getIterator()) {
-                        currentFriends.reverseIterator();
-                        currentFriends.addIterator(id);
-                        break;
-                    } else {
-                        currentFriends.advanceIterator();
+                // Adding in a sorted order
+                currentFriends.placeIterator();
+                if (id < currentFriends.getIterator()) {
+                    currentFriends.addFirst(id);
+                } else {
+                    currentFriends.advanceIterator();
+                    while (!currentFriends.offEnd()) {
+                        if (id < currentFriends.getIterator()) {
+                            currentFriends.reverseIterator();
+                            currentFriends.addIterator(id);
+                            break;
+                        } else {
+                            currentFriends.advanceIterator();
+                        }
+                    }
+                    if (currentFriends.offEnd()) {
+                        currentFriends.addLast(id);
                     }
                 }
-                if (currentFriends.offEnd()) {
-                    currentFriends.addLast(id);
+
+                recommendFriends.placeIterator();
+                recommendFriends.advanceNTimes(recommendFriends.linearSearch(id) - 1);
+                recommendFriends.removeIterator();
+
+                System.out.println("\nHere are your current friends:");
+                for (int i = 0; i < currentFriends.getLength(); i++) {
+                    currentFriends.placeIterator();
+                    currentFriends.advanceNTimes(i);
+                    String result = currentFriends.getIterator() + ". ";
+                    System.out.println(result + names.get(currentFriends.getIterator() - 1));
+                }
+
+                System.out.println("\nHere are your recommended friends:");
+                if (recommendFriends.getLength() == 0) {
+                    System.out.println("Sorry! We don't have any recommendations for you at this time.");
+                    break;
+                } else {
+
+                    for (int i = 0; i < recommendFriends.getLength(); i++) {
+                        recommendFriends.placeIterator();
+                        recommendFriends.advanceNTimes(i);
+                        String result = recommendFriends.getIterator() + ". ";
+                        System.out.println(result + names.get(recommendFriends.getIterator() - 1));
+
+                    }
                 }
             }
-
-            recommendFriends.placeIterator();
-            recommendFriends.advanceNTimes(recommendFriends.linearSearch(id) - 1);
-            recommendFriends.removeIterator();
-
-            System.out.println("\nHere are your current friends:");
-            for (int i = 0; i < currentFriends.getLength(); i++) {
-                currentFriends.placeIterator();
-                currentFriends.advanceNTimes(i);
-                String result = currentFriends.getIterator() + ". ";
-                System.out.println(result + names.get(currentFriends.getIterator() - 1));
-            }
-
-            System.out.println("\nHere are your recommended friends:");
-            if (recommendFriends.getLength() == 0) {
-                System.out.println("Sorry! We don't have any recommendations for you at this time.");
-            } else {
-                for (int i = 0; i < recommendFriends.getLength(); i++) {
-                    recommendFriends.placeIterator();
-                    recommendFriends.advanceNTimes(i);
-                    String result = recommendFriends.getIterator() + ". ";
-                    System.out.println(result + names.get(recommendFriends.getIterator() - 1));
-                }
-            }
-
         }
-
         System.out.println("\nGoodbye!");
+
     }
 }
